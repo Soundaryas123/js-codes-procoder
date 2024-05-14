@@ -66,6 +66,8 @@ a {
 }
 
 .search-container {
+    display: flex; 
+    align-items: center;
     max-width: 400px;
     width: 100%;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.15);
@@ -78,11 +80,13 @@ a {
 }
 
 .search-container input {
+    flex: 1;
     border: none;
     outline: none;
     padding: 16px;
     background-color: inherit;
     color: inherit;
+    font-size: 16px;
 }
 
 .search-container input::placeholder {
@@ -99,7 +103,7 @@ a {
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="18px" height="18px"><path d="M7 10l5 5 5-5H7z" fill="hsl(207, 26%, 17%)" /><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="18px" height="18px"><path d="M7 10l5 5 5-5H7z" fill="gray" /><path d="M0 0h24v24H0z" fill="none"/></svg>');
 
     background-repeat: no-repeat;
     background-position: right 10px center;
