@@ -9,6 +9,15 @@ let dark = localStorage.getItem("dark") === "true";
 if (dark) {
   document.body.classList.add("dark");
 }
+if (!dark) {
+  themeSwitcher.innerHTML = `
+    <i class="fa-solid fa-cloud-moon"></i>&nbsp;&nbsp;Dark Mode
+  `;
+} else {
+  themeSwitcher.innerHTML = `
+    <i class="fa-solid fa-sun"></i>&nbsp;&nbsp;Light Mode
+  `;
+}
 
 function renderCountries(data) {
   countriesContainer.innerHTML = "";
