@@ -15,6 +15,7 @@ body::-webkit-scrollbar {
     border-radius: 4px;
     cursor: pointer;
     margin-left: 14px;
+    background-color: var(--elements-color);
 }
 
 .country-details {
