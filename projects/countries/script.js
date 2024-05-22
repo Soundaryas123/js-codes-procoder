@@ -2,6 +2,7 @@ const countriesContainer = document.querySelector(".countries-container");
 const filterByRegion = document.querySelector(".filter-by-region");
 const searchInput = document.querySelector(".search-input");
 const themeSwitcher = document.querySelector(".theme-switcher");
+const loadingElement = document.querySelector(".loading");
 
 let allCountriesData;
 
@@ -41,13 +42,15 @@ function renderCountries(data) {
     countriesContainer.append(countryCard);
   });
 }
-
+loadingElement.style.display = "block";
 fetch("https://restcountries.com/v3.1/all")
   .then((res) => res.json())
   .then((data) => {
     renderCountries(data);
 
     allCountriesData = data;
+
+    loadingElement.style.display = "none";
   });
 
 filterByRegion.addEventListener("change", (e) => {
