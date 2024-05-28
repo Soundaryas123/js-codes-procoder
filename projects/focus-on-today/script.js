@@ -6,6 +6,10 @@ const progressBar = document.querySelector(".progress-bar");
 const progressValue = document.querySelector(".progress-value");
 const resetAll = document.querySelector("#reset-all");
 const resetButtons = document.querySelectorAll(".custom-reset");
+const additionalInputField = document.getElementById("additional");
+const storedAdditionalWork = localStorage.getItem("additionalWork");
+
+let additionalInputTimeout;
 
 const allQuotes = [
   "Raise the bar by completing your goals!",
@@ -110,17 +114,25 @@ inputFields.forEach((input) => {
   });
 });
 
-let additionalInputTimeout;
-const additionalInputField = document.getElementById("additional");
-
 additionalInputField.addEventListener("input", () => {
   clearTimeout(additionalInputTimeout);
   additionalInputTimeout = setTimeout(() => {
-    if (additionalInputField.value.trim()) {
+    const additionalWork = additionalInputField.value.trim();
+    if (additionalWork) {
+      localStorage.setItem("additionalWork", additionalWork);
       progressLabel.innerText = allQuotes[4];
+    } else {
+      localStorage.removeItem("additionalWork");
+      progressLabel.innerText =
+        allQuotes[completedGoalsCount] || "Great! Keep going!";
     }
   }, 500);
 });
+
+if (storedAdditionalWork) {
+  additionalInputField.value = storedAdditionalWork;
+  progressLabel.innerText = allQuotes[4];
+}
 
 function updateProgress() {
   const totalGoals = 3;

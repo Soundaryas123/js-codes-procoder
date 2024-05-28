@@ -46,7 +46,7 @@ main {
 }
 
 .title span {
-    color: #61481C;
+    color: #B75B48;
 }
 
 .container {
@@ -154,7 +154,6 @@ main {
 
 .goal-input {
     margin: auto;
-
     padding: 0px 12px;
     font-family: inherit;
     border: none;
@@ -212,11 +211,11 @@ main {
 
 
 .extra-achievement-heading span {
-    font-size: 18px;
+    font-size: 20px;
     text-align: center;
     margin: 30px 0;
     font-weight: bold;
-    background: linear-gradient(to right, #48A300, #61481C);
+    background: linear-gradient(to right, #48A300, #B75B48);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     padding: 10px 5px;
@@ -259,7 +258,7 @@ main {
     }
 
     .extra-achievement-heading span {
-        font-size: 12px;
+        font-size: 14px;
     }
 
 }
