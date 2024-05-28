@@ -8,6 +8,7 @@ const resetAll = document.querySelector("#reset-all");
 const resetButtons = document.querySelectorAll(".custom-reset");
 const additionalInputField = document.getElementById("additional");
 const storedAdditionalWork = localStorage.getItem("additionalWork");
+const resetAdditionalButton = document.querySelector("#reset-additional");
 
 let additionalInputTimeout;
 
@@ -127,6 +128,14 @@ additionalInputField.addEventListener("input", () => {
         allQuotes[completedGoalsCount] || "Great! Keep going!";
     }
   }, 500);
+});
+
+resetAdditionalButton.addEventListener("click", () => {
+  additionalInputField.value = "";
+  localStorage.removeItem("additionalWork");
+  progressLabel.innerText =
+    allQuotes[completedGoalsCount] || "Great! Keep going!";
+  localStorage.setItem("additionalWork", "");
 });
 
 if (storedAdditionalWork) {
