@@ -12,27 +12,20 @@ const allQuotes = [
   "Well begun is half done!",
   "Just a step away, keep going!",
   "Whoa! You just completed all the goals, time for chill :D",
+  "Amazing! You completed additional work too that isn't in your list!",
 ];
+
 const allGoals = JSON.parse(localStorage.getItem("allGoals")) || {
-  first: {
-    name: "",
-    completed: false,
-  },
-  second: {
-    name: "",
-    completed: false,
-  },
-  third: {
-    name: "",
-    completed: false,
-  },
+  first: { name: "", completed: false },
+  second: { name: "", completed: false },
+  third: { name: "", completed: false },
+  additional: { name: "", completed: false },
 };
+
 let completedGoalsCount = Object.values(allGoals).filter(
-  (goal) => goal.completed
+  (goal) => goal.completed && goal !== allGoals.additional
 ).length;
-progressValue.style.width = `${(completedGoalsCount / 3) * 100}%`;
-progressValue.firstElementChild.innerText = `${completedGoalsCount}/3 completed`;
-progressLabel.innerText = allQuotes[completedGoalsCount];
+updateProgress();
 
 resetButtons.forEach((resetButton) => {
   resetButton.addEventListener("click", () => {
@@ -40,19 +33,17 @@ resetButtons.forEach((resetButton) => {
     const inputId = inputField.id;
 
     inputField.value = "";
-
-    allGoals[inputId].name = "";
-
-    allGoals[inputId].completed = false;
+    if (allGoals[inputId]) {
+      allGoals[inputId].name = "";
+      allGoals[inputId].completed = false;
+    }
 
     inputField.parentElement.classList.remove("completed");
 
     completedGoalsCount = Object.values(allGoals).filter(
-      (goal) => goal.completed
+      (goal) => goal.completed && goal !== allGoals.additional
     ).length;
-    progressValue.style.width = `${(completedGoalsCount / 3) * 100}%`;
-    progressValue.firstElementChild.innerText = `${completedGoalsCount}/3 completed`;
-    progressLabel.innerText = allQuotes[completedGoalsCount];
+    updateProgress();
 
     localStorage.setItem("allGoals", JSON.stringify(allGoals));
   });
@@ -62,35 +53,35 @@ resetAll.addEventListener("click", () => {
   inputFields.forEach((input) => {
     input.value = "";
     const inputId = input.id;
-    allGoals[inputId].name = "";
-    allGoals[inputId].completed = false;
+    if (allGoals[inputId]) {
+      allGoals[inputId].name = "";
+      allGoals[inputId].completed = false;
+    }
     input.parentElement.classList.remove("completed");
   });
 
   completedGoalsCount = 0;
-  progressValue.style.width = `${(completedGoalsCount / 3) * 100}%`;
-  progressValue.firstElementChild.innerText = `${completedGoalsCount}/3 completed`;
-  progressLabel.innerText = allQuotes[completedGoalsCount];
+  updateProgress();
 
-  localStorage.removeItem("allGoals");
+  localStorage.setItem("allGoals", JSON.stringify(allGoals));
 });
 
 checkBoxList.forEach((checkbox) => {
-  checkbox.addEventListener("click", (e) => {
-    const allFieldsFilled = [...inputFields].every((input) => {
+  checkbox.addEventListener("click", () => {
+    const allFieldsFilled = [...inputFields].slice(0, 3).every((input) => {
       return input.value.trim();
     });
     if (allFieldsFilled) {
       checkbox.parentElement.classList.toggle("completed");
       const inputId = checkbox.nextElementSibling.id;
-      allGoals[inputId].completed = !allGoals[inputId].completed;
-      completedGoalsCount = Object.values(allGoals).filter(
-        (goal) => goal.completed
-      ).length;
-      progressValue.style.width = `${(completedGoalsCount / 3) * 100}%`;
-      progressValue.firstElementChild.innerText = `${completedGoalsCount}/3 completed`;
-      progressLabel.innerText = allQuotes[completedGoalsCount];
-      localStorage.setItem("allGoals", JSON.stringify(allGoals));
+      if (allGoals[inputId]) {
+        allGoals[inputId].completed = !allGoals[inputId].completed;
+        completedGoalsCount = Object.values(allGoals).filter(
+          (goal) => goal.completed && goal !== allGoals.additional
+        ).length;
+        updateProgress();
+        localStorage.setItem("allGoals", JSON.stringify(allGoals));
+      }
     } else {
       progressBar.classList.add("show-error");
     }
@@ -98,22 +89,43 @@ checkBoxList.forEach((checkbox) => {
 });
 
 inputFields.forEach((input) => {
-  input.value = allGoals[input.id].name;
-
-  if (allGoals[input.id].completed) {
-    input.parentElement.classList.add("completed");
+  if (allGoals[input.id]) {
+    input.value = allGoals[input.id].name;
+    if (allGoals[input.id].completed) {
+      input.parentElement.classList.add("completed");
+    }
   }
   input.addEventListener("focus", () => {
     progressBar.classList.remove("show-error");
-    // input.parentElement.classList.remove("completed"); //alternate to getting off the striked of input
   });
-  input.addEventListener("input", (e) => {
-    if (allGoals[input.id].completed) {
+  input.addEventListener("input", () => {
+    if (allGoals[input.id] && allGoals[input.id].completed) {
       input.value = allGoals[input.id].name;
       return;
     }
-
-    allGoals[input.id].name = input.value;
-    localStorage.setItem("allGoals", JSON.stringify(allGoals));
+    if (allGoals[input.id]) {
+      allGoals[input.id].name = input.value;
+      localStorage.setItem("allGoals", JSON.stringify(allGoals));
+    }
   });
 });
+
+let additionalInputTimeout;
+const additionalInputField = document.getElementById("additional");
+
+additionalInputField.addEventListener("input", () => {
+  clearTimeout(additionalInputTimeout);
+  additionalInputTimeout = setTimeout(() => {
+    if (additionalInputField.value.trim()) {
+      progressLabel.innerText = allQuotes[4];
+    }
+  }, 500);
+});
+
+function updateProgress() {
+  const totalGoals = 3;
+  progressValue.style.width = `${(completedGoalsCount / totalGoals) * 100}%`;
+  progressValue.firstElementChild.innerText = `${completedGoalsCount}/${totalGoals} completed`;
+  progressLabel.innerText =
+    allQuotes[completedGoalsCount] || "Great! Keep going!";
+}
